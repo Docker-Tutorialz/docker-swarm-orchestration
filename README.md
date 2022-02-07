@@ -1,6 +1,6 @@
 ## Docker Swarm Orchestration
 
-Just a basic overview about how you can create and  scale NGINX web application on Docker Swarm cluster. 
+Just a basic overview about how you can create and  scale NGINX web application on Docker Swarm cluster. I am using a Docker Swarm cluster on VirtualBox environment to demonstrate the NGINX in action.
 
 ### `Create a NGINX web app to demonstrate the usage on Swarm`
 
