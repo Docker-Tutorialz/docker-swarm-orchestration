@@ -55,5 +55,43 @@ If you check your browser and add the IP of 3 nodes, you can see the NGINX app r
 
 ### `Testing the Docker Swarm orchestration`
 
+1. Now I will connect on some worker node to check the containers in runnung state:
 
+```
+$ docker container ls
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+bf5795b3947a   nginx:latest   "/docker-entrypoint.…"   11 seconds ago   Up 5 seconds    80/tcp    nginxreplicas.4.ionxjjxn4pgyfe93bcjelggxn
+945b93602865   nginx:latest   "/docker-entrypoint.…"   52 minutes ago   Up 52 minutes   80/tcp    nginxreplicas.2.xnzwmil050hu1vvorvm0it98t
+```
 
+As you can see I can 2 Docker containers running on this worker node. I will remove now one Docker container and check again:
+
+```
+$ docker container rm bf5 -f
+bf5
+```
+
+Now I can see the other container has been creating in 8 seconds ago:
+
+```
+$ docker container ls
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+30bb9732b743   nginx:latest   "/docker-entrypoint.…"   8 seconds ago    Up 1 second     80/tcp    nginxreplicas.4.acprd321djie37d81i8257nlp
+945b93602865   nginx:latest   "/docker-entrypoint.…"   53 minutes ago   Up 53 minutes   80/tcp    nginxreplicas.2.xnzwmil050hu1vvorvm0it98t
+```
+
+2. Checking on the master node:
+
+```
+$ docker service ps nginxreplicas
+ID             NAME                  IMAGE          NODE        DESIRED STATE   CURRENT STATE               ERROR                         PORTS
+w1anflp6e0y0   nginxreplicas.1       nginx:latest   elliot01    Running         Running about an hour ago
+xnzwmil050hu   nginxreplicas.2       nginx:latest   elliot02    Running         Running about an hour ago
+drgxv7jf5egh   nginxreplicas.3       nginx:latest   mr-robbot   Running         Running 55 minutes ago
+acprd321djie   nginxreplicas.4       nginx:latest   elliot02    Running         Running 11 minutes ago
+ionxjjxn4pgy    \_ nginxreplicas.4   nginx:latest   elliot02    Shutdown        Failed 12 minutes ago       "task: non-zero exit (137)"
+nu0oz10p1zzx    \_ nginxreplicas.4   nginx:latest   elliot02    Shutdown        Failed 13 minutes ago       "task: non-zero exit (137)"
+wsevqb4f5njz    \_ nginxreplicas.4   nginx:latest   elliot02    Shutdown        Failed 57 minutes ago       "task: non-zero exit (137)"
+glzncjospafs    \_ nginxreplicas.4   nginx:latest   elliot02    Shutdown        Failed 58 minutes ago       "task: non-zero exit (137)"
+cuzobbyqdewg   nginxreplicas.5       nginx:latest   mr-robbot   Running         Running 55 minutes ago
+```
